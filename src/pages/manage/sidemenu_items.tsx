@@ -141,7 +141,7 @@ export const side_menu_items: SideMenuItem[] = [
     icon: FaSolidDatabase,
     component: lazy(() => import("./backup-restore")),
   },
-  
+
   {
     title: "manage.sidemenu.home",
     icon: IoHome,
