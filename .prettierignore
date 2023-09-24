@@ -1,0 +1,6 @@
+dist/
+solid-router/
+pnpm-lock.yaml
+.husky
+.prettierignore
+.gitignore
