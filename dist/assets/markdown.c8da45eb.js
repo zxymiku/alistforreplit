@@ -1,0 +1,1 @@
+import{cO as r,h as n,$ as a,ca as o,Q as c,Z as s}from"./index.444cf32e.js";const g=()=>{const[e]=r();return n(s,{get loading(){return e.loading},get children(){return n(a,{get children(){var t;return(t=e())==null?void 0:t.content},get ext(){return o(c.obj.name)}})}})};export{g as default};
