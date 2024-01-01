@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "types": ["vite/client", "@hrgui/libass-wasm-ts"],
+    "noEmit": true,
+    "isolatedModules": false,
+    "paths": {
+      "~/*": ["./src/*"],
+      "@solidjs/router": ["./solid-router/src/index.tsx"]
+    },
+    "resolveJsonModule": true
+  }
+}
