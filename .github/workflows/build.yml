@@ -1,2 +1,3 @@
 #nothing
 name: build
+on: push
