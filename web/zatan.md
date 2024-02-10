@@ -1,3 +1,4 @@
 replit
 stop
 web
+server
