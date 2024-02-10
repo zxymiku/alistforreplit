@@ -1,2 +1,3 @@
 replit
 stop
+web
