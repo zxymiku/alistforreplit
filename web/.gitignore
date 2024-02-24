@@ -4,5 +4,3 @@ dist
 !/src/lang/en/
 .DS_Store
 .idea
-
-.commit

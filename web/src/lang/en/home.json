@@ -30,6 +30,7 @@
     "refresh": "Refresh",
     "toggle_theme": "Toggle Theme",
     "switch_lang": "Switch Language",
+    "toggle_markdown_toc": "Toggle Outline",
     "toggle_checkbox": "Toggle Checkbox",
     "rename": "Rename",
     "input_new_name": "Input new name",
@@ -110,7 +111,19 @@
       "list": "List View",
       "grid": "Grid View",
       "image": "Image View"
-    }
+    },
+    "position_of_header_navbar": "Position of header & nav bar",
+    "position_of_header_navbar_options": {
+      "static": "Normal",
+      "sticky": "Stick to top of page",
+      "only_navbar_sticky": "Only nav bar sticky"
+    },
+    "show_sidebar": "Show sidebar",
+    "show_sidebar_options": {
+      "none": "None",
+      "visible": "Visible"
+    },
+    "filename_scrollable": "Filename scrollable"
   },
   "package_download": {
     "current_status": "Current Status",

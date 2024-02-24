@@ -3,8 +3,14 @@ import { Motion } from "@motionone/solid"
 import { useContextMenu } from "solid-contextmenu"
 import { batch, createMemo, createSignal, Show } from "solid-js"
 import { CenterLoading, LinkWithPush, ImageWithError } from "~/components"
-import { usePath, useUtil } from "~/hooks"
-import { checkboxOpen, getMainColor, selectAll, selectIndex } from "~/store"
+import { usePath, useRouter, useUtil } from "~/hooks"
+import {
+  checkboxOpen,
+  getMainColor,
+  local,
+  selectAll,
+  selectIndex,
+} from "~/store"
 import { ObjType, StoreObj } from "~/types"
 import { bus, hoverColor } from "~/utils"
 import { getIconByObj } from "~/utils/icon"
@@ -16,13 +22,18 @@ export const GridItem = (props: { obj: StoreObj; index: number }) => {
   }
   const { setPathAs } = usePath()
   const objIcon = (
-    <Icon color={getMainColor()} boxSize="$12" as={getIconByObj(props.obj)} />
+    <Icon
+      color={getMainColor()}
+      boxSize={`${parseInt(local["grid_item_size"]) - 30}px`}
+      as={getIconByObj(props.obj)}
+    />
   )
   const [hover, setHover] = createSignal(false)
   const showCheckbox = createMemo(
     () => checkboxOpen() && (hover() || props.obj.selected),
   )
   const { show } = useContextMenu({ id: 1 })
+  const { pushHref, to } = useRouter()
   return (
     <Motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -45,6 +56,17 @@ export const GridItem = (props: { obj: StoreObj; index: number }) => {
         }}
         as={LinkWithPush}
         href={props.obj.name}
+        // @ts-ignore
+        on:click={(e: PointerEvent) => {
+          if (!checkboxOpen()) return
+          e.preventDefault()
+          if (e.altKey) {
+            // click with alt/option key
+            to(pushHref(props.obj.name))
+            return
+          }
+          selectIndex(props.index, !props.obj.selected)
+        }}
         onMouseEnter={() => {
           setHover(true)
           setPathAs(props.obj.name, props.obj.is_dir, true)
@@ -65,10 +87,11 @@ export const GridItem = (props: { obj: StoreObj; index: number }) => {
       >
         <Center
           class="item-thumbnail"
-          h="70px"
+          h={`${parseInt(local["grid_item_size"])}px`}
           w="$full"
           // @ts-ignore
           on:click={(e) => {
+            if (checkboxOpen()) return
             if (props.obj.type === ObjType.IMAGE) {
               e.stopPropagation()
               e.preventDefault()
@@ -83,7 +106,7 @@ export const GridItem = (props: { obj: StoreObj; index: number }) => {
               left="$1"
               top="$1"
               // colorScheme="neutral"
-              // @ts-ignore
+              // @ts-expect-error
               on:click={(e) => {
                 e.stopPropagation()
               }}

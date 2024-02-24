@@ -13,7 +13,7 @@ import artplayerPluginAss from "~/components/artplayer-plugin-ass"
 import flvjs from "flv.js"
 import Hls from "hls.js"
 import { currentLang } from "~/app/i18n"
-import { VideoBox } from "./video_box"
+import { AutoHeightPlugin, VideoBox } from "./video_box"
 import { ArtPlayerIconsSubtitle } from "~/components/icons"
 import { useNavigate } from "@solidjs/router"
 
@@ -95,7 +95,7 @@ const Preview = () => {
     ],
     quality: [],
     // highlight: [],
-    plugins: [],
+    plugins: [AutoHeightPlugin],
     whitelist: [],
     settings: [],
     // subtitle:{}
@@ -203,10 +203,15 @@ const Preview = () => {
           <span
             title={item.name}
             style={{
-              display: "inline-block",
-              "max-width": "15em",
-              "text-overflow": "ellipsis",
+              "max-width": "200px",
               overflow: "hidden",
+              "text-overflow": "ellipsis",
+              "word-break": "break-all",
+              "white-space": "normal",
+              display: "-webkit-box",
+              "-webkit-line-clamp": "2",
+              "-webkit-box-orient": "vertical",
+              "font-size": "12px",
             }}
           >
             {item.name}
@@ -295,7 +300,6 @@ const Preview = () => {
       default:
         auto_fullscreen = false
     }
-    console.log(auto_fullscreen)
     player.on("ready", () => {
       player.fullscreen = auto_fullscreen
     })
@@ -310,7 +314,7 @@ const Preview = () => {
   const [autoNext, setAutoNext] = createSignal()
   return (
     <VideoBox onAutoNextChange={setAutoNext}>
-      <Box w="$full" h="60vh" id="video-player" />
+      <Box w="$full" id="video-player" />
     </VideoBox>
   )
 }
