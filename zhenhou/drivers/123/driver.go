@@ -6,6 +6,13 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"golang.org/x/time/rate"
+	"io"
+	"net/http"
+	"net/url"
+	"sync"
+	"time"
+
 	"github.com/alist-org/alist/v3/drivers/base"
 	"github.com/alist-org/alist/v3/internal/driver"
 	"github.com/alist-org/alist/v3/internal/errs"
@@ -17,14 +24,12 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/go-resty/resty/v2"
 	log "github.com/sirupsen/logrus"
-	"io"
-	"net/http"
-	"net/url"
 )
 
 type Pan123 struct {
 	model.Storage
 	Addition
+	apiRateLimit sync.Map
 }
 
 func (d *Pan123) Config() driver.Config {
@@ -232,6 +237,9 @@ func (d *Pan123) Put(ctx context.Context, dstDir model.Obj, stream model.FileStr
 			return err
 		}
 		uploader := s3manager.NewUploader(s)
+		if stream.GetSize() > s3manager.MaxUploadParts*s3manager.DefaultUploadPartSize {
+			uploader.PartSize = stream.GetSize() / (s3manager.MaxUploadParts - 1)
+		}
 		input := &s3manager.UploadInput{
 			Bucket: &resp.Data.Bucket,
 			Key:    &resp.Data.Key,
@@ -248,6 +256,13 @@ func (d *Pan123) Put(ctx context.Context, dstDir model.Obj, stream model.FileStr
 		}).SetContext(ctx)
 	}, nil)
 	return err
+}
+
+func (d *Pan123) APIRateLimit(api string) bool {
+	limiter, _ := d.apiRateLimit.LoadOrStore(api,
+		rate.NewLimiter(rate.Every(time.Millisecond*700), 1))
+	ins := limiter.(*rate.Limiter)
+	return ins.Allow()
 }
 
 var _ driver.Driver = (*Pan123)(nil)
